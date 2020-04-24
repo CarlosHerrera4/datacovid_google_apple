@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>Intro to MapView - Create a 2D map - 4.15</title>
+
+    <link rel="stylesheet" href="./css/main.css">
+    <link rel="stylesheet" href="https://js.arcgis.com/4.15/esri/themes/light/main.css" />
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"></script>
+
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts-gl/dist/echarts-gl.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts-stat/dist/ecStat.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts/dist/extension/dataTool.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts/map/js/china.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts/map/js/world.js"></script>
+    <!-- <script type="text/javascript"
+        src="https://api.map.baidu.com/api?v=2.0&ak=xfhhaTThl11qYVrqLZii6w8qE5ggnhrY&__ec_v__=20190126"></script> -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts/dist/extension/bmap.min.js"></script>
+
+    <script>
+        window.dojoConfig = {
+            packages: [
+                {
+                    name: "vue",
+                    location: "https://cdn.jsdelivr.net/npm/vue/dist",
+                    main: "vue"
+                }
+            ]
+        }
+    </script>
+    <script src="https://js.arcgis.com/4.15/"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/vue"></script> -->
+    <script src="js/index.js" type="text/javascript"></script>
+</head>
+
+
+
+<body style="display: flex; justify-content: center;">
+    <!-- <div style="display: flex; justify-content: center;"> -->
+    <div id="viewDiv" class="viewDiv">
+
+    </div>
+
+    <div id="charts" style="display: flex; flex-direction: column;">
+        <div id="generalChart" style="flex: 1 1 calc(40%)">
+            <h2 id="country" style="text-align: center;"></h2>
+            <canvas id="chart-country"></canvas>
+        </div>
+        <div style="flex: 1 1 calc(40%)">
+            <h4 style="text-align: center;">{{ nameRegion }}</h4>
+            <select name="" id="selectRegions" v-on:change="changeRegion($event)" >
+                <option v-for="subregion in subregions" value="subregion.name">{{ subregion.name }}</option>
+            </select>
+            <div style="height: 100%" id=regionsChart>
+
+            </div>
+        </div>
+        <div id="dataRegionsChart">
+
+        </div>
+    </div>
+
+
+</body>
+
+</html>
