@@ -40,7 +40,6 @@
 
 
 <body style="display: flex; justify-content: center;">
-    <!-- <div style="display: flex; justify-content: center;"> -->
     <div id="viewDiv" class="viewDiv">
 
     </div>
@@ -50,17 +49,18 @@
             <h2 id="country" style="text-align: center;"></h2>
             <canvas id="chart-country"></canvas>
         </div>
-        <div style="flex: 1 1 calc(40%)">
-            <h4 style="text-align: center;">{{ nameRegion }}</h4>
-            <select name="" id="selectRegions" v-on:change="changeRegion($event)" >
+        <div style="flex: 1 1 calc(40%)" id="regions_">
+            <h4 style="text-align: center;" v-if="subregions.length != 0">{{ nameRegion }}</h4>
+            <select name="" id="selectRegions" v-on:change="changeRegion($event)" v-if="subregions.length > 0">
                 <option v-for="subregion in subregions" value="subregion.name">{{ subregion.name }}</option>
             </select>
-            <div style="height: 100%" id=regionsChart>
+            <div style="height: 100%" id=regionsChart v-if="nameRegion">
 
             </div>
         </div>
-        <div id="dataRegionsChart">
-
+        <div style="display: none; height: 100%;" id="dataRegionsChart">
+            <h3 id="name-city" style="text-align: center;"></h3>
+            <canvas id="chart-city"></canvas>
         </div>
     </div>
 

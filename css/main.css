@@ -5,13 +5,17 @@ html,
             margin: 0;
             height: 100%;
             width: 100%;
-            font-family: 'Poppins', monospace;
+            font-family: 'Poppins', monospace !important;
             display: flex;
             justify-content: center;
         }
 
         canvas {
           position: absolute;
+        }
+
+        select {
+          font-family: 'Poppins', monospace;
         }
 
         @media only screen and (max-width: 800px) {
