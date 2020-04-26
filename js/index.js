@@ -497,23 +497,12 @@ require([
 
         },
         computed: {
-            // selected: {
-            //     get () {
-            //         debugger
-            //     }
-            // }
-            // hrStyles() {
-            //     console.log("color:" + this.color)
-            //     return {
-            //         border: "1px solid",
-            //         borderColor: "#" + this.color
-            //     }
-            // }
+
         }
 
     });
 
-    esriRequest("https://localhost:3344/webappbuilder/apps/data_google/apple_data.json", {
+    esriRequest("https://mundogister.github.io/covid19-google-apple-data/data/apple_data.json", {
         responseType: "json"
     }).then(function (response) {
         this.cities = response.data
@@ -537,6 +526,7 @@ require([
                         highlight = null;
                     }
                     if (hit) {
+                        document.getElementById('principal-page').style.display = "none";
                         // Si es una ciudad
                         if (hit.type && hit.type == "apple") {
 
@@ -551,96 +541,97 @@ require([
                             var city = array.filter(this.cities, function (item) {
                                 return item.region == hit.graphic.attributes.CITY_NAME
                             });
+                            if (city.length > 0) {
 
-                            var dates = Object.keys(city[0])
-                            dates.splice(0, 3)
-                            var drivingValues = Object.values(city[0])
-                            drivingValues.splice(0, 3)
-                            var transitValues = Object.values(city[1])
-                            transitValues.splice(0, 3)
-                            var walkingValues = Object.values(city[2])
-                            walkingValues.splice(0, 3)
+                                var dates = Object.keys(city[0])
+                                dates.splice(0, 3)
+                                var drivingValues = Object.values(city[0])
+                                drivingValues.splice(0, 3)
+                                var transitValues = Object.values(city[1])
+                                transitValues.splice(0, 3)
+                                var walkingValues = Object.values(city[2])
+                                walkingValues.splice(0, 3)
 
-                            for (i = 0; i < drivingValues.length; i++) {
-                                drivingValues[i] = (parseFloat(drivingValues[i]) - 100).toFixed(0)
-                                transitValues[i] = (parseFloat(transitValues[i]) - 100).toFixed(0)
-                                walkingValues[i] = (parseFloat(walkingValues[i]) - 100).toFixed(0)
-                            }
+                                for (i = 0; i < drivingValues.length; i++) {
+                                    drivingValues[i] = (parseFloat(drivingValues[i]) - 100).toFixed(0)
+                                    transitValues[i] = (parseFloat(transitValues[i]) - 100).toFixed(0)
+                                    walkingValues[i] = (parseFloat(walkingValues[i]) - 100).toFixed(0)
+                                }
 
-                            var _config = {
-                                type: 'line',
-                                data: {
-                                    labels: dates,
-                                    datasets: [{
-                                        label: 'Driving',
-                                        fill: false,
-                                        backgroundColor: "#FE2E55",
-                                        borderColor: "#FE2E55",
-                                        data: drivingValues
+                                var _config = {
+                                    type: 'line',
+                                    data: {
+                                        labels: dates,
+                                        datasets: [{
+                                            label: 'Driving',
+                                            fill: false,
+                                            backgroundColor: "#FE2E55",
+                                            borderColor: "#FE2E55",
+                                            data: drivingValues
+                                        },
+                                        {
+                                            label: 'Transit',
+                                            backgroundColor: "#AF50DE",
+                                            borderColor: "#AF50DE",
+                                            data: transitValues,
+                                            fill: false,
+                                        },
+                                        {
+                                            label: 'Walking',
+                                            backgroundColor: "#FE9403",
+                                            borderColor: "#FE9403",
+                                            data: walkingValues,
+                                            fill: false,
+                                        }
+                                        ]
                                     },
-                                    {
-                                        label: 'Transit',
-                                        backgroundColor: "#AF50DE",
-                                        borderColor: "#AF50DE",
-                                        data: transitValues,
-                                        fill: false,
-                                    },
-                                    {
-                                        label: 'Walking',
-                                        backgroundColor: "#FE9403",
-                                        borderColor: "#FE9403",
-                                        data: walkingValues,
-                                        fill: false,
-                                    }
-                                    ]
-                                },
-                                options: {
-                                    responsive: true,
-                                    title: {
-                                        display: false,
-                                        text: "AAAA"
-                                    },
-                                    tooltips: {
-                                        mode: 'index',
-                                        intersect: false,
-                                    },
-                                    hover: {
-                                        mode: 'nearest',
-                                        intersect: true
-                                    },
-                                    scales: {
-                                        xAxes: [{
-                                            display: true,
-                                            gridLines: {
-                                                display: false,
-                                                drawBorder: false
-                                            },
-                                            scaleLabel: {
-                                                display: false,
-                                                labelString: 'Mes'
-                                            }
-                                        }],
-                                        yAxes: [{
-                                            display: true,
-                                            gridLines: {
-                                                display: false,
-                                                drawBorder: false
-                                            },
-                                            scaleLabel: {
+                                    options: {
+                                        responsive: true,
+                                        title: {
+                                            display: false,
+                                            text: "AAAA"
+                                        },
+                                        tooltips: {
+                                            mode: 'index',
+                                            intersect: false,
+                                        },
+                                        hover: {
+                                            mode: 'nearest',
+                                            intersect: true
+                                        },
+                                        scales: {
+                                            xAxes: [{
                                                 display: true,
-                                                labelString: '% Mobility Trends'
-                                            }
-                                        }]
+                                                gridLines: {
+                                                    display: false,
+                                                    drawBorder: false
+                                                },
+                                                scaleLabel: {
+                                                    display: false,
+                                                    labelString: 'Mes'
+                                                }
+                                            }],
+                                            yAxes: [{
+                                                display: true,
+                                                gridLines: {
+                                                    display: false,
+                                                    drawBorder: false
+                                                },
+                                                scaleLabel: {
+                                                    display: true,
+                                                    labelString: '% Mobility Trends'
+                                                }
+                                            }]
+                                        }
                                     }
                                 }
+
+                                document.getElementById('generalChart').style.display = "none";
+                                document.getElementById('regions_').style.display = "none";
+                                document.getElementById('dataRegionsChart').style.display = "block";
+                                document.getElementById('name-city').innerText = hit.graphic.attributes.CITY_NAME + "  (city)";
+                                chart = new Chart(document.getElementById('chart-city').getContext("2d"), _config);
                             }
-
-                            document.getElementById('generalChart').style.display = "none";
-                            document.getElementById('regions_').style.display = "none";
-                            document.getElementById('dataRegionsChart').style.display = "block";
-                            document.getElementById('name-city').innerText = hit.graphic.attributes.CITY_NAME + "  (city)";
-                            chart = new Chart(document.getElementById('chart-city').getContext("2d"), _config);
-
                         }
                         // Si es un país
                         else {
@@ -792,7 +783,9 @@ require([
 
 
                                 if (subRegions.length > 0) {
-
+                                    if (document.getElementById('regions_').style.display == "none") {
+                                        document.getElementById('regions_').style.display = "block"
+                                    }
 
                                     // Array with subregions names
                                     arraySubRegionsTable = [];
@@ -886,14 +879,14 @@ require([
                                             { type: 'line', smooth: true, seriesLayoutBy: 'row' },
                                             { type: 'line', smooth: true, seriesLayoutBy: 'row' },
                                             { type: 'line', smooth: true, seriesLayoutBy: 'row' },
-                                            
+
                                             {
                                                 type: 'pie',
                                                 id: 'pie',
                                                 radius: '30%',
                                                 center: ['50%', '25%'],
                                                 label: {
-                                                    formatter: '{b}: {d}'
+                                                    formatter: '{b}: {d}(%)'
                                                 },
                                                 encode: {
                                                     itemName: 'Fecha',
@@ -938,6 +931,9 @@ require([
                                     // _info.subregions = arraySubRegionsTable;
                                 }
                                 else {
+                                    if (document.getElementById('regions_').style.display != "none") {
+                                        document.getElementById('regions_').style.display = "none"
+                                    }
                                     if (_info.myChart) {
                                         _info.myChart = null;
                                     }

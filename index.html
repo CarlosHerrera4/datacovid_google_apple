@@ -45,15 +45,28 @@
     </div>
 
     <div id="charts" style="display: flex; flex-direction: column;">
+        <div style="height: 100%; padding: 2em;" id="principal-page">
+            <h2>Data COVID-19 Mobility Trends</h2>
+            <h4>Data from Google & Apple</h4>
+            <div>
+                This application shows the mobility trend in the areas of: recreation, pharmacy, work, driving walking, etc. For this, the data provided by Google and Apple have been
+                used. First of then refer to countries and the second refer to cities/regions.
+                To know more about this data, see the terms of use of <a href="https://www.google.com/covid19/mobility/">Google</a> and <a href="https://www.apple.com/covid19/mobility">Apple</a>.
+            </div>
+            <div>Just click to see the data </div>
+            <h6 style="position: fixed; bottom: 0">Made with ♥ by Carlos Herrera</h6>
+        </div>
         <div id="generalChart" style="flex: 1 1 calc(40%)">
             <h2 id="country" style="text-align: center;"></h2>
             <canvas id="chart-country"></canvas>
         </div>
         <div style="flex: 1 1 calc(40%)" id="regions_">
             <h4 style="text-align: center;" v-if="subregions.length != 0">{{ nameRegion }}</h4>
-            <select name="" id="selectRegions" v-on:change="changeRegion($event)" v-if="subregions.length > 0">
-                <option v-for="subregion in subregions" value="subregion.name">{{ subregion.name }}</option>
-            </select>
+            <div style="padding-left: 1em">
+                <select name="" id="selectRegions" v-on:change="changeRegion($event)" v-if="subregions.length > 0">
+                    <option v-for="subregion in subregions" value="subregion.name">{{ subregion.name }}</option>
+                </select>
+            </div>
             <div style="height: 100%" id="regionsChart">
 
             </div>
