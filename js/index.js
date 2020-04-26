@@ -287,6 +287,8 @@ require([
         "MZ"
     ]
 
+    const names_cities = ["Amsterdam", "Athens", "Atlanta", "Auckland", "Baltimore", "Bangkok", "Barcelona", "Berlin", "Birmingham - UK", "Bochum - Dortmund", "Boston", "Brisbane", "Brussels", "Buenos Aires", "Cairo", "Calgary", "Cape Town", "Chicago", "Cologne", "Copenhagen", "Dallas", "Delhi", "Denver", "Detroit", "Dubai", "Dublin", "Dusseldorf", "Edmonton", "Frankfurt", "Fukuoka", "Guadalajara", "Halifax", "Hamburg", "Helsinki", "Houston", "Hsin-chu", "Istanbul", "Jakarta", "Johannesburg", "Kuala Lumpur", "Leeds", "Lille", "London", "Los Angeles", "Lyon", "Madrid", "Manchester", "Manila", "Melbourne", "Mexico City", "Miami", "Milan", "Montreal", "Moscow", "Mumbai", "Munich", "Nagoya", "New York City", "Osaka", "Oslo", "Ottawa", "Paris", "Perth", "Philadelphia", "Rio de Janeiro", "Riyadh", "Rome", "Rotterdam", "Saint Petersburg", "San Francisco - Bay Area", "Santiago", "Sao Paulo", "Seattle", "Seoul", "Stockholm", "Stuttgart", "Sydney", "Taichung", "Taipei", "Tel Aviv", "Tijuana", "Tokyo", "Toronto", "Toulouse", "Utrecht", "Vancouver", "Vienna", "Washington DC", "Zurich"]
+
     var chart;
     var layer = new FeatureLayer({
         url: "https://services.arcgis.com/P3ePLMYs2RVChkJx/arcgis/rest/services/World_Countries_(Generalized)/FeatureServer/0",
@@ -316,7 +318,17 @@ require([
 
     })
 
-    var expression = country_codes.toString().replace(/,/g, ' OR ')
+    var expression_country = country_codes.toString().replace(/,/g, ' OR ')
+    var expression_cities = names_cities.toString().replace(/,/g, " OR CITY_NAME = '")
+    var aa = ""
+    for (i = 0; i < names_cities.length; i++) {
+        if (i == names_cities.length - 1) {
+            var aa = aa + "CITY_NAME LIKE '" + names_cities[i] + "'"
+        }
+        else {
+            var aa = aa + "CITY_NAME LIKE '" + names_cities[i] + "' OR "
+        }
+    }
 
     var layerCities = new FeatureLayer({
         url: "https://services.arcgis.com/P3ePLMYs2RVChkJx/ArcGIS/rest/services/World_Cities/FeatureServer/0",
@@ -324,6 +336,7 @@ require([
         popupEnabled: true,
         visible: true,
         title: "Cities",
+        definitionExpresion: aa
         // opacity: 0,
 
 
@@ -360,12 +373,6 @@ require([
         layers: [layer, layerCities, worldCountriesExtruded]
     });
 
-    // var view = new MapView({
-    //     container: "viewDiv",
-    //     map: map,
-    //     zoom: 4,
-    //     center: [15, 65] // longitude, latitude
-    // });
     var view = new SceneView({
         container: "viewDiv",
         map: map,
@@ -380,25 +387,22 @@ require([
 
     });
 
-    // view.when(function () {
-    //     const handle = scheduling.addFrameTask({
-    //         update: function () {
-    //             if (!view.interacting) {
+    // const handle = scheduling.addFrameTask({
+    //     update: function () {
+    //         if (!view.interacting) {
+    //             if (view.camera) {
     //                 const camera = view.camera.clone();
     //                 camera.position.longitude -= 0.25;
     //                 view.camera = camera;
-    //             } else {
-    //                 handle.remove();
     //             }
+
+    //         } else {
+    //             handle.remove();
     //         }
-    //     });
-    //     this.handle = handle
-
-    // })
-
-    // view.on("click", function () {
-    //     handle.remove();
+    //     }
     // });
+    // this.handle = handle
+
 
     view.popup.set("dockOptions", {
         breakpoint: false,
@@ -453,7 +457,7 @@ require([
             nameRegion: "",
             subregions: [],
             myChart: null,
-            options: null
+            option: null
         },
         methods: {
             changeRegion: function changeItem(event) {
@@ -467,33 +471,29 @@ require([
                 })
 
                 n_data[0].dates.unshift('Fecha')
-                n_data[0].retail_recreation.unshift('Retail')
-                n_data[0].grocery_pharmacy.unshift('Pharmacy')
+                n_data[0].retail_recreation.unshift('Retail & Recreation')
+                n_data[0].grocery_pharmacy.unshift('Grocery & Pharmacy')
                 n_data[0].parks.unshift('Parks')
+                n_data[0].transit_stations.unshift('Transit Stations')
+                n_data[0].workplaces.unshift('Workplaces')
+                n_data[0].residential.unshift('Residential')
 
-                this.option.dataset.source = [
-                    n_data[0].dates,
-                    n_data[0].retail_recreation,
-                    n_data[0].grocery_pharmacy,
-                    n_data[0].parks
-                ]
-                this.nameRegion = n_data[0].name;
-                this.myChart.setOption(this.option)
 
-            },
-            // goToSubRegions(subregion) {
-            // that.map.setExtent(destiny.geometry.getExtent())
-            // var query = {
-            //     spatialRelationship: "intersects",
-            //     where: "ADMIN_NAME = '" + subregion.name + "'",
-            //     returnQueryGeometry: true
-            // }
-            // layerCities.queryExtent(query).then(lang.hitch(this, function (evt) {
-            //     if (evt && evt.center) {
-            //         view.goTo(evt.center)
-            //     }
-            // }))
-            // }
+                if (this.option != undefined) {
+                    this.option.dataset.source = [
+                        n_data[0].dates,
+                        n_data[0].retail_recreation,
+                        n_data[0].grocery_pharmacy,
+                        n_data[0].parks,
+                        n_data[0].transit_stations,
+                        n_data[0].workplaces,
+                        n_data[0].residential
+                    ]
+                    this.nameRegion = n_data[0].name;
+                    this.myChart.setOption(this.option)
+                }
+
+            }
 
         },
         computed: {
@@ -524,7 +524,10 @@ require([
         var highlight;
 
         view.on("click", function (evt) {
-
+            if (this.handle) {
+                this.handle.remove();
+                this.handle = null
+            }
             // this.handle.remove();
 
             return hitTest(evt).then(
@@ -666,7 +669,10 @@ require([
                                 arrayDates = []
                                 arrayRetailAndRecreation = [];
                                 arrayGroceryAndPharmacy = [];
-                                arrayParks = []
+                                arrayParks = [];
+                                arrayTransitStations = [];
+                                arrayWorkplaces = [];
+                                arrayResidential = [];
 
                                 subRegions = []
 
@@ -676,6 +682,10 @@ require([
                                         arrayRetailAndRecreation.push(parseFloat(response.data[i].retail_and_recreation_percent_change_from_baseline));
                                         arrayGroceryAndPharmacy.push(parseFloat(response.data[i].grocery_and_pharmacy_percent_change_from_baseline));
                                         arrayParks.push(parseFloat(response.data[i].parks_percent_change_from_baseline))
+                                        arrayTransitStations.push(parseFloat(response.data[i].transit_stations_percent_change_from_baseline))
+                                        arrayWorkplaces.push(parseFloat(response.data[i].workplaces_percent_change_from_baseline))
+                                        arrayResidential.push(parseFloat(response.data[i].residential_percent_change_from_baseline))
+
                                     }
                                     else {
                                         subRegions.push(response.data[i])
@@ -699,12 +709,36 @@ require([
                                             borderColor: "green",
                                             data: arrayGroceryAndPharmacy,
                                             fill: false,
+                                            hidden: true
                                         },
                                         {
                                             label: 'Parks',
                                             backgroundColor: "red",
                                             borderColor: "red",
                                             data: arrayParks,
+                                            fill: false,
+                                            hidden: true
+                                        },
+                                        {
+                                            label: 'Transit Stations',
+                                            fill: false,
+                                            backgroundColor: "yellow",
+                                            borderColor: "yellow",
+                                            data: arrayTransitStations,
+                                            hidden: true
+                                        },
+                                        {
+                                            label: 'Workplaces',
+                                            backgroundColor: "pink",
+                                            borderColor: "pink",
+                                            data: arrayWorkplaces,
+                                            fill: false,
+                                        },
+                                        {
+                                            label: 'Residential',
+                                            backgroundColor: "black",
+                                            borderColor: "black",
+                                            data: arrayResidential,
                                             fill: false,
                                         }
                                         ]
@@ -779,18 +813,28 @@ require([
                                         _arrayRetailAndRecreation = [];
                                         _arrayGroceryAndPharmacy = [];
                                         _arrayParks = [];
+                                        _arrayTransitStations = [];
+                                        _arrayWorkplaces = [];
+                                        _arrayResidential = [];
                                         for (j = 0; j < subregionArray.length; j++) {
                                             _arrayDates.push(subregionArray[j].date);
                                             _arrayRetailAndRecreation.push(subregionArray[j].retail_and_recreation_percent_change_from_baseline)
                                             _arrayGroceryAndPharmacy.push(subregionArray[j].grocery_and_pharmacy_percent_change_from_baseline)
                                             _arrayParks.push(subregionArray[j].parks_percent_change_from_baseline)
+                                            _arrayTransitStations.push(subregionArray[j].transit_stations_percent_change_from_baseline)
+                                            _arrayWorkplaces.push(subregionArray[j].workplaces_percent_change_from_baseline)
+                                            _arrayResidential.push(subregionArray[j].residential_percent_change_from_baseline)
+
                                         }
                                         var infoSubRegion = {
                                             name: subregionname,
                                             dates: _arrayDates,
                                             retail_recreation: _arrayRetailAndRecreation,
                                             grocery_pharmacy: _arrayGroceryAndPharmacy,
-                                            parks: _arrayParks
+                                            parks: _arrayParks,
+                                            transit_stations: _arrayTransitStations,
+                                            workplaces: _arrayWorkplaces,
+                                            residential: _arrayResidential
                                         }
                                         arraySubRegionsTable.push(infoSubRegion)
 
@@ -801,9 +845,12 @@ require([
                                     _info.nameRegion = arraySubRegionsTable[0].name + "  (region)"
 
                                     arraySubRegionsTable[0].dates.unshift("Fecha")
-                                    arraySubRegionsTable[0].retail_recreation.unshift("Retail")
-                                    arraySubRegionsTable[0].grocery_pharmacy.unshift('Pharmacy')
+                                    arraySubRegionsTable[0].retail_recreation.unshift("Retail & Recreation")
+                                    arraySubRegionsTable[0].grocery_pharmacy.unshift('Grocery & Pharmacy')
                                     arraySubRegionsTable[0].parks.unshift('Parks')
+                                    arraySubRegionsTable[0].transit_stations.unshift('Transit Stations')
+                                    arraySubRegionsTable[0].workplaces.unshift('Workplaces')
+                                    arraySubRegionsTable[0].residential.unshift('Residential')
 
                                     var dom = document.getElementById('regionsChart');
                                     var myChart = echarts.init(dom);
@@ -822,7 +869,10 @@ require([
                                                 arraySubRegionsTable[0].dates,
                                                 arraySubRegionsTable[0].retail_recreation,
                                                 arraySubRegionsTable[0].grocery_pharmacy,
-                                                arraySubRegionsTable[0].parks
+                                                arraySubRegionsTable[0].parks,
+                                                arraySubRegionsTable[0].transit_stations,
+                                                arraySubRegionsTable[0].workplaces,
+                                                arraySubRegionsTable[0].residential
                                             ]
                                         },
                                         xAxis: { type: 'category' },
@@ -830,9 +880,13 @@ require([
                                         grid: { top: '55%' },
                                         series: [
                                             { type: 'line', smooth: true, seriesLayoutBy: 'row' },
+                                            { type: 'line', smooth: true, seriesLayoutBy: 'row', visible: true },
                                             { type: 'line', smooth: true, seriesLayoutBy: 'row' },
                                             { type: 'line', smooth: true, seriesLayoutBy: 'row' },
                                             { type: 'line', smooth: true, seriesLayoutBy: 'row' },
+                                            { type: 'line', smooth: true, seriesLayoutBy: 'row' },
+                                            { type: 'line', smooth: true, seriesLayoutBy: 'row' },
+                                            
                                             {
                                                 type: 'pie',
                                                 id: 'pie',
@@ -871,9 +925,13 @@ require([
 
                                     myChart.setOption(option);
 
-                                    document.getElementById('selectRegions').selectedIndex = 0;
+                                    // if (document.getElementById('selectRegions')) {
                                     _info.myChart = myChart;
                                     _info.option = option;
+
+                                    document.getElementById('selectRegions').selectedIndex = "0";
+                                    // }
+
 
 
 

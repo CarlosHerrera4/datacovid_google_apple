@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
-    <title>Intro to MapView - Create a 2D map - 4.15</title>
+    <title>Google & Apple Mobility Trends - COVID-19</title>
 
     <link rel="stylesheet" href="./css/main.css">
     <link rel="stylesheet" href="https://js.arcgis.com/4.15/esri/themes/light/main.css" />
@@ -54,7 +54,7 @@
             <select name="" id="selectRegions" v-on:change="changeRegion($event)" v-if="subregions.length > 0">
                 <option v-for="subregion in subregions" value="subregion.name">{{ subregion.name }}</option>
             </select>
-            <div style="height: 100%" id=regionsChart v-if="nameRegion">
+            <div style="height: 100%" id="regionsChart">
 
             </div>
         </div>
