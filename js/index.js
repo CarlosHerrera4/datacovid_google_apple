@@ -572,6 +572,8 @@ require([
         var highlight;
 
         view.on("click", function (evt) {
+            window.resizeTo(window.innerWidth - 10, window.innerHeight - 10)
+
             if (this.handle) {
                 this.handle.remove();
                 this.handle = null
@@ -726,6 +728,9 @@ require([
                                     chart.data.datasets[0].data = [];
                                     chart.data.datasets[1].data = [];
                                     chart.data.datasets[2].data = [];
+                                    chart.data.datasets[3].data = [];
+                                    chart.data.datasets[4].data = [];
+                                    chart.data.datasets[5].data = [];
 
                                     chart.update();
                                 }
@@ -946,7 +951,6 @@ require([
                                         grid: { top: '55%' },
                                         series: [
                                             { type: 'line', smooth: true, seriesLayoutBy: 'row' },
-                                            { type: 'line', smooth: true, seriesLayoutBy: 'row', visible: true },
                                             { type: 'line', smooth: true, seriesLayoutBy: 'row' },
                                             { type: 'line', smooth: true, seriesLayoutBy: 'row' },
                                             { type: 'line', smooth: true, seriesLayoutBy: 'row' },
