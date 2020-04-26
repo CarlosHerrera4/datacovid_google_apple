@@ -9,6 +9,7 @@ require([
     "esri/views/MapView",
     "esri/views/SceneView",
     "esri/layers/FeatureLayer",
+    "esri/layers/support/LabelClass",
 
     "esri/widgets/Expand",
 
@@ -26,6 +27,7 @@ require([
     MapView,
     SceneView,
     FeatureLayer,
+    LabelClass,
 
     Expand,
 
@@ -319,28 +321,92 @@ require([
     })
 
     var expression_country = country_codes.toString().replace(/,/g, ' OR ')
-    var expression_cities = names_cities.toString().replace(/,/g, " OR CITY_NAME = '")
-    var aa = ""
-    for (i = 0; i < names_cities.length; i++) {
-        if (i == names_cities.length - 1) {
-            var aa = aa + "CITY_NAME LIKE '" + names_cities[i] + "'"
-        }
-        else {
-            var aa = aa + "CITY_NAME LIKE '" + names_cities[i] + "' OR "
-        }
-    }
 
     var layerCities = new FeatureLayer({
-        url: "https://services.arcgis.com/P3ePLMYs2RVChkJx/ArcGIS/rest/services/World_Cities/FeatureServer/0",
+        // url: "https://services.arcgis.com/P3ePLMYs2RVChkJx/ArcGIS/rest/services/World_Cities/FeatureServer/0",
+        url: "https://services5.arcgis.com/4PVmYEz8hZwCHSxy/ArcGIS/rest/services/WorldCities_Data/FeatureServer/0",
         outFields: ["*"],
         popupEnabled: true,
         visible: true,
         title: "Cities",
-        definitionExpresion: aa
+        labelingInfo: [
+            new LabelClass({
+                labelExpressionInfo: { expression: "$feature.CITY_NAME" },
+                symbol: {
+                    type: "label-3d",
+                    symbolLayers: [{
+                        type: "text",  // autocasts as new TextSymbol3DLayer()
+                        material: { color: "#3D4C57" },
+                        size: 10,
+                        font: {
+                            family: "Poppins"
+                            // weight: "bold"
+                        },
+                        halo: {
+                            color: "white",
+                            size: 1
+                        }
+                    }]
+                }
+            })
+        ],
+        renderer: {
+            type: "simple",
+            symbol: {
+                type: "point-3d",
+                symbolLayers: [{
+                    type: "icon",
+                    size: 8,
+                    resource: { primitive: "circle" },
+                    material: { color: "#4c397f" },
+                    outline: {
+                        size: 1,
+                        color: "white"
+                    }
+                }],
+                verticalOffset: {
+                    screenLength: 0
+                },
+                callout: {
+                    type: "line", // autocasts as new LineCallout3D()
+                    size: 1.5,
+                    color: "#4c397f"
+                }
+            }
+        },
+        screenSizePerspectiveEnabled: false
         // opacity: 0,
 
 
     })
+
+    var renderer = {
+        type: "simple",
+        symbol: {
+            type: "polygon-3d",
+            symbolLayers: [
+                {
+                    type: "extrude",
+                    size: 75000,
+                    material: { color: "#3D4C57" },
+                }
+            ]
+        },
+    }
+
+    var renderer_2 = {
+        type: "simple",
+        symbol: {
+            type: "polygon-3d",
+            symbolLayers: [
+                {
+                    type: "extrude",
+                    size: 75000,
+                    material: { color: "red" },
+                }
+            ]
+        },
+    }
 
     var worldCountriesExtruded = new FeatureLayer({
         url: "https://services.arcgis.com/P3ePLMYs2RVChkJx/ArcGIS/rest/services/World_Countries_(Generalized)/FeatureServer/0",
@@ -348,19 +414,7 @@ require([
             mode: "relative-to-ground",
             offset: -80000,
         },
-        renderer: {
-            type: "simple",
-            symbol: {
-                type: "polygon-3d",
-                symbolLayers: [
-                    {
-                        type: "extrude",
-                        size: 75000,
-                        material: { color: "#3D4C57" },
-                    }
-                ]
-            },
-        }
+        renderer: renderer
     });
 
 
@@ -377,6 +431,11 @@ require([
         container: "viewDiv",
         map: map,
         zoom: 3,
+        highlightOptions: {
+            haloOpacity: 0,
+            color: "white",
+            fillOpacity: 0.6,
+        },
         // alphaCompositingEnabled: true,
         environment: {
             starsEnabled: true,
@@ -547,15 +606,29 @@ require([
                                 dates.splice(0, 3)
                                 var drivingValues = Object.values(city[0])
                                 drivingValues.splice(0, 3)
-                                var transitValues = Object.values(city[1])
-                                transitValues.splice(0, 3)
-                                var walkingValues = Object.values(city[2])
-                                walkingValues.splice(0, 3)
+                                if (city[1]) {
+                                    var transitValues = Object.values(city[1])
+                                    transitValues.splice(0, 3)
+                                }
+                                else {
+                                    transitValues = []
+                                }
+                                if (city[2]) {
+                                    var walkingValues = Object.values(city[2])
+                                    walkingValues.splice(0, 3)
+                                }
+                                else {
+                                    walkingValues = []
+                                }
 
                                 for (i = 0; i < drivingValues.length; i++) {
                                     drivingValues[i] = (parseFloat(drivingValues[i]) - 100).toFixed(0)
-                                    transitValues[i] = (parseFloat(transitValues[i]) - 100).toFixed(0)
-                                    walkingValues[i] = (parseFloat(walkingValues[i]) - 100).toFixed(0)
+                                    if (transitValues[i]) {
+                                        transitValues[i] = (parseFloat(transitValues[i]) - 100).toFixed(0)
+                                    }
+                                    if (walkingValues[i]) {
+                                        walkingValues[i] = (parseFloat(walkingValues[i]) - 100).toFixed(0)
+                                    }
                                 }
 
                                 var _config = {
@@ -969,25 +1042,6 @@ require([
 
         })
     }))
-
-
-
-
-    Vue.component('listsubregions', {
-        template: [
-            "<div style='display: flex; flex-direction: column;'>",
-            "<div v-on:click='showChart'>{{ subregion.name }}</div>",
-            "</div>"
-        ].join(""),
-        props: {
-            subregion: Object
-        },
-        methods: {
-            showChart: function () {
-
-            }
-        }
-    })
 
 
 });
