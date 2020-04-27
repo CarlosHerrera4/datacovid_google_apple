@@ -446,21 +446,21 @@ require([
 
     });
 
-    // const handle = scheduling.addFrameTask({
-    //     update: function () {
-    //         if (!view.interacting) {
-    //             if (view.camera) {
-    //                 const camera = view.camera.clone();
-    //                 camera.position.longitude -= 0.25;
-    //                 view.camera = camera;
-    //             }
+    const handle = scheduling.addFrameTask({
+        update: function () {
+            if (!view.interacting) {
+                if (view.camera) {
+                    const camera = view.camera.clone();
+                    camera.position.longitude -= 0.25;
+                    view.camera = camera;
+                }
 
-    //         } else {
-    //             handle.remove();
-    //         }
-    //     }
-    // });
-    // this.handle = handle
+            } else {
+                handle.remove();
+            }
+        }
+    });
+    this.handle = handle
 
 
     view.popup.set("dockOptions", {
