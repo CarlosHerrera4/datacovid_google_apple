@@ -291,7 +291,7 @@ require([
 
     const names_cities = ["Amsterdam", "Athens", "Atlanta", "Auckland", "Baltimore", "Bangkok", "Barcelona", "Berlin", "Birmingham - UK", "Bochum - Dortmund", "Boston", "Brisbane", "Brussels", "Buenos Aires", "Cairo", "Calgary", "Cape Town", "Chicago", "Cologne", "Copenhagen", "Dallas", "Delhi", "Denver", "Detroit", "Dubai", "Dublin", "Dusseldorf", "Edmonton", "Frankfurt", "Fukuoka", "Guadalajara", "Halifax", "Hamburg", "Helsinki", "Houston", "Hsin-chu", "Istanbul", "Jakarta", "Johannesburg", "Kuala Lumpur", "Leeds", "Lille", "London", "Los Angeles", "Lyon", "Madrid", "Manchester", "Manila", "Melbourne", "Mexico City", "Miami", "Milan", "Montreal", "Moscow", "Mumbai", "Munich", "Nagoya", "New York City", "Osaka", "Oslo", "Ottawa", "Paris", "Perth", "Philadelphia", "Rio de Janeiro", "Riyadh", "Rome", "Rotterdam", "Saint Petersburg", "San Francisco - Bay Area", "Santiago", "Sao Paulo", "Seattle", "Seoul", "Stockholm", "Stuttgart", "Sydney", "Taichung", "Taipei", "Tel Aviv", "Tijuana", "Tokyo", "Toronto", "Toulouse", "Utrecht", "Vancouver", "Vienna", "Washington DC", "Zurich"]
 
-    var chart;
+    var chart, chart2;
     var layer = new FeatureLayer({
         url: "https://services.arcgis.com/P3ePLMYs2RVChkJx/arcgis/rest/services/World_Countries_(Generalized)/FeatureServer/0",
         outFields: ["*"],
@@ -375,9 +375,6 @@ require([
             }
         },
         screenSizePerspectiveEnabled: false
-        // opacity: 0,
-
-
     })
 
     var renderer = {
@@ -436,7 +433,6 @@ require([
             color: "white",
             fillOpacity: 0.6,
         },
-        // alphaCompositingEnabled: true,
         environment: {
             starsEnabled: true,
             atmosphereEnabled: true
@@ -520,10 +516,8 @@ require([
         },
         methods: {
             changeRegion: function changeItem(event) {
-
                 var index = event.currentTarget.selectedIndex;
                 var regionSelected = event.currentTarget.options[index].innerText;
-                // this.selected = "rowId: " + rowId + ", target.value: " + event.target.value;
 
                 var n_data = array.filter(this.subregions, function (item) {
                     return item.name == regionSelected
@@ -536,7 +530,6 @@ require([
                 n_data[0].transit_stations.unshift('Transit Stations')
                 n_data[0].workplaces.unshift('Workplaces')
                 n_data[0].residential.unshift('Residential')
-
 
                 if (this.option != undefined) {
                     this.option.dataset.source = [
@@ -578,7 +571,6 @@ require([
                 this.handle.remove();
                 this.handle = null
             }
-            // this.handle.remove();
 
             return hitTest(evt).then(
                 function (hit) {
@@ -724,15 +716,15 @@ require([
                             esriRequest(url, {
                                 responseType: "json"
                             }).then(function (response) {
-                                if (chart != undefined) {
-                                    chart.data.datasets[0].data = [];
-                                    chart.data.datasets[1].data = [];
-                                    chart.data.datasets[2].data = [];
-                                    chart.data.datasets[3].data = [];
-                                    chart.data.datasets[4].data = [];
-                                    chart.data.datasets[5].data = [];
+                                if (chart2 && chart2 != undefined) {
+                                    chart2.data.datasets[0].data = [];
+                                    chart2.data.datasets[1].data = [];
+                                    chart2.data.datasets[2].data = [];
+                                    chart2.data.datasets[3].data = [];
+                                    chart2.data.datasets[4].data = [];
+                                    chart2.data.datasets[5].data = [];
 
-                                    chart.update();
+                                    chart2.update();
                                 }
 
                                 arrayDates = []
@@ -857,7 +849,7 @@ require([
                                 document.getElementById('regions_').style.display = "block";
                                 document.getElementById('dataRegionsChart').style.display = "none"
 
-                                chart = new Chart(document.getElementById('chart-country').getContext("2d"), config);
+                                chart2 = new Chart(document.getElementById('chart-country').getContext("2d"), config);
 
 
                                 if (subRegions.length > 0) {
@@ -995,17 +987,11 @@ require([
 
                                     myChart.setOption(option);
 
-                                    // if (document.getElementById('selectRegions')) {
                                     _info.myChart = myChart;
                                     _info.option = option;
 
                                     document.getElementById('selectRegions').selectedIndex = "0";
-                                    // }
-
-
-
-
-                                    // _info.subregions = arraySubRegionsTable;
+                                    
                                 }
                                 else {
                                     if (document.getElementById('regions_').style.display != "none") {
@@ -1042,9 +1028,6 @@ require([
             )
         })
 
-        view.on("pointer-move", function (evt) {
-
-        })
     }))
 
 

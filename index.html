@@ -17,8 +17,6 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts/dist/extension/dataTool.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts/map/js/china.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts/map/js/world.js"></script>
-    <!-- <script type="text/javascript"
-        src="https://api.map.baidu.com/api?v=2.0&ak=xfhhaTThl11qYVrqLZii6w8qE5ggnhrY&__ec_v__=20190126"></script> -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts/dist/extension/bmap.min.js"></script>
 
     <script>
@@ -33,7 +31,6 @@
         }
     </script>
     <script src="https://js.arcgis.com/4.15/"></script>
-    <!-- <script src="https://cdn.jsdelivr.net/npm/vue"></script> -->
     <script src="js/index.js" type="text/javascript"></script>
 </head>
 
@@ -57,10 +54,9 @@
                     href="https://www.apple.com/covid19/mobility">Apple</a>.
             </div>
             <div>Just click in country or city to see the data </div>
-            <h6 style="position: fixed; bottom: 0">Made with ♥ by Carlos Herrera</h6>
+            <h6 style="position: fixed; bottom: 0">Made with ♥. This prototype was built with the <a href="https://developers.arcgis.com/javascript/" target="_blank">ArcGIS API JavaScript</a> and the source is availabe in <a href="https://github.com/MundoGister/datacovid_google_apple" target="_blank">GitHub</a> </h6>
         </div>
         <div id="generalChart" style="flex: 1 1 calc(30%)">
-        <!-- <div id="generalChart" style="flex: 1"> -->
             <h2 id="country" style="text-align: center;"></h2>
             <canvas id="chart-country"></canvas>
         </div>
