@@ -61,12 +61,6 @@ width: 320px;
   overflow-y: auto !important;
 }
 
-        /* @media only screen and (max-width: 550px) {
-          #charts {
-            flex: unset;
-          }
-        } */
-
 #regions_ {
   display: block;
 }
@@ -97,9 +91,12 @@ width: 320px;
     }
 }
 
-#principal-page {
-  font-size: 13px;
+@media only screen and (max-width: 550px) {
+  #principal-page {
+    font-size: 13px;
+  }
 }
+
 
 .wrapper {
   position: fixed;
