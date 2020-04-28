@@ -4,6 +4,8 @@
 
 Visor que muestra las tendencias de movilidad en diferentes ámbitos en ciudades y países respecto a una semana tipo (Febrero 2020). Los datos mostrados se han obtenido directamente de [Google](https://www.google.com/covid19/mobility/) y [Apple](https://www.apple.com/covid19/mobility). 
 
+[Demo](https://mundogister.github.io/datacovid_google_apple/)
+
 A nivel de país, se muestran datos de Google y diferentes categorías: 
   - Minorista y recreación
   - Supermercados y farmacias
